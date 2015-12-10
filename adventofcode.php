@@ -10,6 +10,7 @@
 
 use Advent\StairClimber;
 use Advent\WrappingNeeds;
+use Advent\SantaDeliveries;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -22,6 +23,9 @@ switch ($adventString) {
     break;
   case "wrapping_needs":
     $adventDay = new WrappingNeeds();
+    break;
+  case "santa_deliveries":
+    $adventDay = new SantaDeliveries();
     break;
 }
 
