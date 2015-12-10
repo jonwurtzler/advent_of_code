@@ -1,0 +1,24 @@
+{
+  "name": "jonwurtzler/advent_of_code",
+  "description": "My solutions for the 2015 advent of code site",
+  "authors": [
+    {
+      "name": "Jon Wurtzler",
+      "email": "jwurtzle@nerdery.com"
+    }
+  ],
+  "license": "MIT",
+  "require-dev": {
+    "phpunit/phpunit" : "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Advent\\": "src/Advent/"
+    }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/AdventTests.php"
+    ]
+  }
+}
