@@ -13,8 +13,8 @@ Install the vendor dependencies with Composer:
     $ php adventofcode.php <advent day>
     
     Current days available
-    - stair_climber   (php adventofcode.php stair_climber)
-    - wrapping_needs  (php adventofcode.php wrapping_needs)
+    - Day 1: stair_climber   (php adventofcode.php stair_climber)
+    - Day 2: wrapping_needs  (php adventofcode.php wrapping_needs)
    
 
 
