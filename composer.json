@@ -18,7 +18,8 @@
   },
   "autoload-dev": {
     "classmap": [
-      "tests/AdventTests.php"
+      "tests/StairClimbingTest.php",
+      "tests/WrappingNeedsTest.php"
     ]
   }
 }

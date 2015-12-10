@@ -9,6 +9,7 @@
  */
 
 use Advent\StairClimber;
+use Advent\WrappingNeeds;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -19,8 +20,13 @@ switch ($adventString) {
   case "stair_climber":
     $adventDay = new StairClimber();
     break;
+  case "wrapping_needs":
+    $adventDay = new WrappingNeeds();
+    break;
 }
 
 if (!is_null($adventDay)) {
   $adventDay->display();
+} else {
+  echo ("Invalid option, please try again\n");
 }

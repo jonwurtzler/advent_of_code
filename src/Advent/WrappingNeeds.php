@@ -1,8 +1,15 @@
-<?php namespace Advent;
+<?php
 
-class WrappingPaper implements AdventOutputInterface
+namespace Advent;
+
+use Exception;
+
+class WrappingNeeds implements AdventOutputInterface
 {
 
+  /**
+   * @var array
+   */
   private $areas = [
     "4x23x21", "22x29x19", "11x4x11", "8x10x5", "24x18x16", "11x25x22", "2x13x20", "24x15x14",
     "14x22x2", "30x7x3", "30x22x25", "29x9x9", "29x29x26", "14x3x16", "1x10x26", "29x2x30",
@@ -116,25 +123,57 @@ class WrappingPaper implements AdventOutputInterface
    *
    * @return mixed
    */
-  public function display() {
-    // TODO: Implement display() method.
+  public function display()
+  {
+    $totalWrappingPaper = $this->calculateTotalWrappingPaperArea();
+    $totalRibbon        = $this->calculateTotalRibbonArea();
+
+    echo ("The elves will need: {$totalWrappingPaper} sq ft of wrapping paper\n");
+    echo ("The Elves will also need: {$totalRibbon} sq ft of ribbon\n");
   }
 
-  public function calculateTotalWrappingPaperArea() {
+  /**
+   * Step 1.  Calculate total amount of wrapping paper needed.
+   *
+   * @return int
+   */
+  public function calculateTotalWrappingPaperArea()
+  {
     $totalArea = 0;
+
     for ($i = 0; $i < count($this->areas); $i++) {
       $totalArea += $this->wrappingNeeded($this->areas[$i]);
-  }
-}
+    }
 
-  public function calculateTotalRibbonArea() {
+    return $totalArea;
+  }
+
+  /**
+   * Step 2.  Calculate total ribbon needed.
+   *
+   * @return int
+   */
+  public function calculateTotalRibbonArea()
+  {
     $ribbonTotalArea = 0;
+
     for ($i = 0; $i < count($this->areas); $i++) {
       $ribbonTotalArea += $this->ribbonNeeded($this->areas[$i]);
     }
+
+    return $ribbonTotalArea;
   }
 
-  public function wrappingNeeded($dimensions) {
+  /**
+   * Determine how much wrapping paper will be needed for a package.
+   *
+   * @param string $dimensions
+   *
+   * @return int
+   * @throws Exception
+   */
+  public function wrappingNeeded($dimensions)
+  {
     $dimArray = $this->splitDimensions($dimensions);
 
     $giftLength = $dimArray[0];
@@ -146,51 +185,54 @@ class WrappingPaper implements AdventOutputInterface
     $side3 = $giftHeight * $giftWidth;
 
     $sides = [$side1, $side2, $side3];
-    $smallest = $sides . sort($this->holidaySorter)[0];
+
+    sort($sides);
+    $smallest = $sides[0];
 
     $totalArea = (2 * $side1) + (2 * $side2) + (2 * $side3) + $smallest;
 
     return $totalArea;
   }
 
-  public function ribbonNeeded(dimensions) {
-    var
-    dimArray = this . splitDimensions(dimensions);
+  /**
+   * Determine how much ribbon will be needed based on the dimensions.
+   *
+   * @param string $dimensions
+   *
+   * @return int
+   * @throws Exception
+   */
+  public function ribbonNeeded($dimensions)
+  {
+    $dimArray = $this->splitDimensions($dimensions);
 
-    var
-    sorted = dimArray . sort(this . holidaySorter);
-    console . log(sorted);
+    sort($dimArray);
 
-    var
-    ribbonLength = (2 * sorted[0]) +(2 * sorted[1]);
-  var bowLength = sorted[0] * sorted[1] * sorted[2];
+    $ribbonLength = (2 * $dimArray[0]) + (2 * $dimArray[1]);
+    $bowLength    = $dimArray[0] * $dimArray[1] * $dimArray[2];
 
-  return ribbonLength + bowLength;
-}
-
-  private function holidaySorter(a, b) {
-    if (a == b) {
-      return 0;
-    }
-
-    return a > b ? 1 : -1;
+    return $ribbonLength + $bowLength;
   }
 
-  private function splitDimensions(stringDimensions) {
-      // dimArray[0] = length
-      // dimArray[1] = width
-      // dimArray[2] = height
-      var
-      dimArray = stringDimensions . split('x');
+  /**
+   * Split the dimensions and make sure they are int.
+   *
+   * @param string $stringDimensions
+   *
+   * @return int[]
+   * @throws Exception
+   */
+  private function splitDimensions($stringDimensions)
+  {
+    // dimArray[0] = length
+    // dimArray[1] = width
+    // dimArray[2] = height
+    $dimArray = array_map("intval", explode("x", $stringDimensions));
 
-      for (var i = 0; i < dimArray . length; i++) {
-        dimArray[i] = parseInt(dimArray[i], 10);
-    }
-
-    if (dimArray . length != 3) {
-      $("#answer") . html("Invalid Dimension: " + stringDimensions);
+    if (3 !== count($dimArray)) {
+      throw new Exception("Invalid Dimension: {$stringDimensions}");
     } else {
-      return dimArray;
+      return $dimArray;
     }
   }
 

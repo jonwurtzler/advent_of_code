@@ -1,74 +1,71 @@
 <?php
+
 use Advent\StairClimber;
 
-/**
- * @author Jon Wurtzler <jon.wurtzler@gmail.com>
- */
-class AdventTests extends PHPUnit_Framework_TestCase
+class StairClimbingTest extends PHPUnit_Framework_TestCase
 {
-  public function testStairClimberUp()
+  public function testUp()
   {
-      $stairClimber = new StairClimber();
-      $this->assertEquals(1, $stairClimber->finalFloor("("));
+    $stairClimber = new StairClimber();
+    $this->assertEquals(1, $stairClimber->finalFloor("("));
   }
 
-  public function testStairClimberDown()
+  public function testDown()
   {
     $stairClimber = new StairClimber();
     $this->assertEquals(-1, $stairClimber->finalFloor(")"));
   }
 
-  public function testStairClimberMainFloor()
+  public function testMainFloor()
   {
     $stairClimber = new StairClimber();
     $this->assertEquals(0, $stairClimber->finalFloor(")("));
   }
 
   // Test example from the website
-  public function testStairClimberTC1()
+  public function testTC1()
   {
     $stairClimber = new StairClimber();
     $this->assertEquals(0, $stairClimber->finalFloor("()()"));
   }
 
   // Test example from the website
-  public function testStairClimberTC2()
+  public function testTC2()
   {
     $stairClimber = new StairClimber();
     $this->assertEquals(3, $stairClimber->finalFloor("(()(()("));
   }
 
   // Test example from the website
-  public function testStairClimberTC3()
+  public function testTC3()
   {
     $stairClimber = new StairClimber();
     $this->assertEquals(3, $stairClimber->finalFloor("))((((("));
   }
 
   // Test example from the website
-  public function testStairClimberTC4()
+  public function testTC4()
   {
     $stairClimber = new StairClimber();
     $this->assertEquals(-1, $stairClimber->finalFloor("))("));
   }
 
   // Test example from the website
-  public function testStairClimberTC5()
+  public function testTC5()
   {
     $stairClimber = new StairClimber();
     $this->assertEquals(-3, $stairClimber->finalFloor(")())())"));
   }
 
-  public function testStairClimberBasementOne()
+  public function testBasementOne()
   {
     $stairClimber = new StairClimber();
     $this->assertEquals(1, $stairClimber->stepsToBasement(")"));
   }
 
-  public function testStairClimberBasementMany()
+  public function testBasementMany()
   {
     $stairClimber = new StairClimber();
     $this->assertEquals(5, $stairClimber->stepsToBasement("(()))"));
   }
-
 }
