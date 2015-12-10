@@ -31,6 +31,9 @@ class SantaDeliveriesTest extends PHPUnit_Framework_TestCase
     $santaDeliveries->santaDirections("^>a");
   }
 
+  /* -----------------------------------------------------------------------------------------
+   * Step 2
+   */
 
   public function testSantaAndRobotDeliveriesTC1()
   {

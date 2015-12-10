@@ -57,6 +57,11 @@ class StairClimbingTest extends PHPUnit_Framework_TestCase
     $this->assertEquals(-3, $stairClimber->finalFloor(")())())"));
   }
 
+
+  /* -----------------------------------------------------------------------------------------
+   * Step 2
+   */
+
   public function testBasementOne()
   {
     $stairClimber = new StairClimber();

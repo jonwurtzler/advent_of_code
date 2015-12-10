@@ -9,25 +9,13 @@ class WrappingNeedsTest extends PHPUnit_Framework_TestCase
   public function testWrappingNeedsTC1()
   {
     $wrappingNeeds = new WrappingNeeds();
-    $this->assertEquals(58, $wrappingNeeds->wrappingNeeded("2x3x4"));
+    $this->assertEquals(58, $wrappingNeeds->calculateTotalWrappingPaperArea(["2x3x4"]));
   }
 
   public function testWrappingNeedsTC2()
   {
     $wrappingNeeds = new WrappingNeeds();
-    $this->assertEquals(43, $wrappingNeeds->wrappingNeeded("1x1x10"));
-  }
-
-  public function testRibbonTC1()
-  {
-    $wrappingNeeds = new WrappingNeeds();
-    $this->assertEquals(34, $wrappingNeeds->ribbonNeeded("2x3x4"));
-  }
-
-  public function testRibbonTC2()
-  {
-    $wrappingNeeds = new WrappingNeeds();
-    $this->assertEquals(14, $wrappingNeeds->ribbonNeeded("1x1x10"));
+    $this->assertEquals(43, $wrappingNeeds->calculateTotalWrappingPaperArea(["1x1x10"]));
   }
 
   /**
@@ -35,7 +23,23 @@ class WrappingNeedsTest extends PHPUnit_Framework_TestCase
    */
   public function testInvalidWrappingDimensions() {
     $wrappingNeeds = new WrappingNeeds();
-    $wrappingNeeds->wrappingNeeded("23x4");
+    $wrappingNeeds->calculateTotalWrappingPaperArea(["23x4"]);
+  }
+
+  /* -----------------------------------------------------------------------------------------
+   * Step 2
+   */
+
+  public function testRibbonTC1()
+  {
+    $wrappingNeeds = new WrappingNeeds();
+    $this->assertEquals(34, $wrappingNeeds->calculateTotalRibbonArea(["2x3x4"]));
+  }
+
+  public function testRibbonTC2()
+  {
+    $wrappingNeeds = new WrappingNeeds();
+    $this->assertEquals(14, $wrappingNeeds->calculateTotalRibbonArea(["1x1x10"]));
   }
 
   /**
@@ -43,6 +47,6 @@ class WrappingNeedsTest extends PHPUnit_Framework_TestCase
    */
   public function testInvalidRibbonDimensions() {
     $wrappingNeeds = new WrappingNeeds();
-    $wrappingNeeds->ribbonNeeded("23x4");
+    $wrappingNeeds->calculateTotalRibbonArea(["23x4"]);
   }
 }
