@@ -11,6 +11,7 @@
 use Advent\StairClimber;
 use Advent\WrappingNeeds;
 use Advent\SantaDeliveries;
+use Advent\NaughtyNiceList;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -26,6 +27,9 @@ switch ($adventString) {
     break;
   case "santa_deliveries":
     $adventDay = new SantaDeliveries();
+    break;
+  case "naughty_and_nice_list":
+    $adventDay = new NaughtyNiceList();
     break;
 }
 
