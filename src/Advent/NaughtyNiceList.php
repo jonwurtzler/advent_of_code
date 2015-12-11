@@ -4,7 +4,6 @@ namespace Advent;
 
 class NaughtyNiceList extends AdventInstructions implements AdventOutputInterface
 {
-
   /**
    * @var array
    */
@@ -53,6 +52,70 @@ class NaughtyNiceList extends AdventInstructions implements AdventOutputInterfac
 
     return $niceCount;
   }
+
+  /*
+  | -------------------------------------------------------------------
+  |  Step 1
+  | -------------------------------------------------------------------
+  */
+
+  /**
+   * Determine if a string is nice based on rules.
+   *
+   * @param string $string
+   *
+   * @return bool
+   */
+  private function isNice($string)
+  {
+    $doubleCheck = "";
+    $hasDouble   = false;
+    $vowelCount  = 0;
+
+    if (!$this->isNaughty($string)) {
+      for ($i = 0; $i < strlen($string); $i++) {
+        if (in_array($string[$i], $this->vowels)) {
+          $vowelCount++;
+        }
+
+        if ($string[$i] === $doubleCheck) {
+          $hasDouble = true;
+        } else {
+          $doubleCheck = $string[$i];
+        }
+
+        if (($vowelCount > 2) && $hasDouble) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Check string for naughty elements.
+   *
+   * @param string $string
+   *
+   * @return bool
+   */
+  private function isNaughty($string)
+  {
+    foreach ($this->naughtySets as $set) {
+      if (strpos($string, $set) > -1) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /*
+  | -------------------------------------------------------------------
+  |  Step 2
+  | -------------------------------------------------------------------
+  */
 
   /**
    * Check if a string is nice on the advanced rules. (step 2).
@@ -109,58 +172,6 @@ class NaughtyNiceList extends AdventInstructions implements AdventOutputInterfac
 
     for ($i = 0; $i < ($len - 2); $i++) {
       if ($string[$i] === $string[$i + 2]) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  /**
-   * Determine if a string is nice based on rules.
-   *
-   * @param string $string
-   *
-   * @return bool
-   */
-  private function isNice($string)
-  {
-    $doubleCheck = "";
-    $hasDouble   = false;
-    $vowelCount  = 0;
-
-    if (!$this->isNaughty($string)) {
-      for ($i = 0; $i < strlen($string); $i++) {
-        if (in_array($string[$i], $this->vowels)) {
-          $vowelCount++;
-        }
-
-        if ($string[$i] === $doubleCheck) {
-          $hasDouble = true;
-        } else {
-          $doubleCheck = $string[$i];
-        }
-
-        if (($vowelCount > 2) && $hasDouble) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
-  /**
-   * Check string for naughty elements.
-   *
-   * @param string $string
-   *
-   * @return bool
-   */
-  private function isNaughty($string)
-  {
-    foreach ($this->naughtySets as $set) {
-      if (strpos($string, $set) > -1) {
         return true;
       }
     }
