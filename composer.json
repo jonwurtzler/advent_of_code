@@ -20,7 +20,8 @@
     "classmap": [
       "tests/StairClimbingTest.php",
       "tests/WrappingNeedsTest.php",
-      "tests/SantaDeliveriesTest.php"
+      "tests/SantaDeliveriesTest.php",
+      "tests/AdventCoinMiningTest.php"
     ]
   }
 }
