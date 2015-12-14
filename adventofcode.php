@@ -8,11 +8,12 @@
  * @date 12/09/2015
  */
 
+use Advent\AdventCoinMining;
+use Advent\LightsAlive;
+use Advent\NaughtyNiceList;
+use Advent\SantaDeliveries;
 use Advent\StairClimber;
 use Advent\WrappingNeeds;
-use Advent\SantaDeliveries;
-use Advent\AdventCoinMining;
-use Advent\NaughtyNiceList;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -34,6 +35,9 @@ switch ($adventString) {
     break;
   case "naughty_and_nice_list":
     $adventDay = new NaughtyNiceList();
+    break;
+  case "lights_alive":
+    $adventDay = new LightsAlive();
     break;
 }
 
