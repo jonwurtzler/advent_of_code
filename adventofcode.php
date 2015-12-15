@@ -10,6 +10,7 @@
 
 use Advent\AdventCoinMining;
 use Advent\LightsAlive;
+use Advent\LookAndSay;
 use Advent\NaughtyNiceList;
 use Advent\SantaDeliveries;
 use Advent\StairClimber;
@@ -38,6 +39,9 @@ switch ($adventString) {
     break;
   case "lights_alive":
     $adventDay = new LightsAlive();
+    break;
+  case "look_and_say":
+    $adventDay = new LookAndSay();
     break;
 }
 
