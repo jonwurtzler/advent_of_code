@@ -13,6 +13,7 @@ use Advent\LightsAlive;
 use Advent\LookAndSay;
 use Advent\NaughtyNiceList;
 use Advent\SantaDeliveries;
+use Advent\SantasPassword;
 use Advent\StairClimber;
 use Advent\WrappingNeeds;
 
@@ -42,6 +43,9 @@ switch ($adventString) {
     break;
   case "look_and_say":
     $adventDay = new LookAndSay();
+    break;
+  case "santas_password":
+    $adventDay = new SantasPassword();
     break;
 }
 

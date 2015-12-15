@@ -20,4 +20,5 @@ Install the vendor dependencies with Composer:
     - Day 5:  naughty_nice_list      (php adventofcode.php naughty_nice_list)
     - Day 6:  lights_alive           (php adventofcode.php lights_alive)      *VERY SLOW*
     - Day 10: look_and_say           (php adventofcode.php look_and_say)
+    - Day 11: stantas_password       (php adventofcode.php stantas_password)
     
