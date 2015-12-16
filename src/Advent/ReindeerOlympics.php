@@ -2,7 +2,6 @@
 
 namespace Advent;
 
-
 use Advent\Reindeer\Reindeer;
 use Advent\Reindeer\ReindeerFactory;
 use Exception;
@@ -32,9 +31,11 @@ class ReindeerOlympics implements AdventOutputInterface
   public function display()
   {
     $this->loadReindeer($this->fileInput);
-    $results = $this->race();
+    $distanceResults = $this->distanceRace();
+    $pointsResults   = $this->pointsRace();
 
-    echo ("Race 1: \n" . $results . "\n");
+    echo ("Distance Race: \n" . $distanceResults . "\n");
+    echo ("Points Race: \n" . $pointsResults . "\n");
   }
 
   private function loadReindeer($filePath) {
@@ -52,7 +53,49 @@ class ReindeerOlympics implements AdventOutputInterface
     }
   }
 
-  private function race() {
+  /**
+   * Run the race via points instead of just distance.
+   *
+   * @return string
+   */
+  private function pointsRace()
+  {
+    $results = [];
+    $output  = "";
+
+    for ($i = 1; $i <= $this->raceDuration; $i++) {
+      $currWinnerName  = "";
+      $currWinnerStats = [];
+
+      foreach ($this->racers as $racerName => $racer) {
+        $results[$racerName]['distance'] = $racer->distanceTraveled($i);
+        if (1 === $i) {
+          $results[$racerName]['points'] = 0;
+        }
+
+        if (empty($currWinnerName)) {
+          $currWinnerName = $racerName;
+          $currWinnerStats = $results[$racerName];
+        } elseif ($currWinnerStats['distance'] < $results[$racerName]['distance'])
+      }
+
+      $results[0]['points']++;
+    }
+
+    array_multisort($results['points'], SORT_DESC, SORT_NUMERIC);
+    foreach ($results as $racerName => $data) {
+      $output .= $racerName . " made " . $data['points'] . "points\n";
+    }
+
+    return $output;
+  }
+
+  /**
+   * Run the race via distance.
+   *
+   * @return string
+   */
+  private function distanceRace() {
     $results = [];
     $output  = "";
 
@@ -67,4 +110,5 @@ class ReindeerOlympics implements AdventOutputInterface
 
     return $output;
   }
+
 }
