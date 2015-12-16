@@ -38,6 +38,14 @@ class ReindeerOlympics implements AdventOutputInterface
     echo ("Points Race: \n" . $pointsResults . "\n");
   }
 
+  /**
+   * Populate racers from the file provided.
+   *
+   * @param string $filePath
+   *
+   * @return void
+   * @throws Exception
+   */
   private function loadReindeer($filePath) {
     $fh = fopen($filePath, 'r');
 
@@ -51,43 +59,6 @@ class ReindeerOlympics implements AdventOutputInterface
     } else {
       throw new Exception("Failed to load file: " . $filePath);
     }
-  }
-
-  /**
-   * Run the race via points instead of just distance.
-   *
-   * @return string
-   */
-  private function pointsRace()
-  {
-    $results = [];
-    $output  = "";
-
-    for ($i = 1; $i <= $this->raceDuration; $i++) {
-      $currWinnerName  = "";
-      $currWinnerStats = [];
-
-      foreach ($this->racers as $racerName => $racer) {
-        $results[$racerName]['distance'] = $racer->distanceTraveled($i);
-        if (1 === $i) {
-          $results[$racerName]['points'] = 0;
-        }
-
-        if (empty($currWinnerName)) {
-          $currWinnerName = $racerName;
-          $currWinnerStats = $results[$racerName];
-        } elseif ($currWinnerStats['distance'] < $results[$racerName]['distance'])
-      }
-
-      $results[0]['points']++;
-    }
-
-    array_multisort($results['points'], SORT_DESC, SORT_NUMERIC);
-    foreach ($results as $racerName => $data) {
-      $output .= $racerName . " made " . $data['points'] . "points\n";
-    }
-
-    return $output;
   }
 
   /**
@@ -109,6 +80,81 @@ class ReindeerOlympics implements AdventOutputInterface
     }
 
     return $output;
+  }
+
+  /**
+   * Run the race via points instead of just distance.
+   *
+   * @return string
+   */
+  private function pointsRace()
+  {
+    $results = [];
+    $output  = "";
+
+    for ($i = 1; $i <= $this->raceDuration; $i++) {
+      $leaderNames = $this->getLeaderNames($i);
+
+      foreach ($leaderNames as $name) {
+        if (!isset($results[$name]['points'])) {
+          $results[$name]['points'] = 0;
+        }
+
+        $results[$name]['points']++;
+      }
+    }
+
+    $results = $this->sortPointRaceResults($results);
+
+    foreach ($results as $racerName => $data) {
+      $output .= $racerName . " made " . $data['points'] . " points\n";
+    }
+
+    return $output;
+  }
+
+  /**
+   * Get the name(s) of the leader(s) at the given time interval.
+   *
+   * @param int $time
+   *
+   * @return string[]
+   */
+  private function getLeaderNames($time)
+  {
+    $leaderDistance = 0;
+    $leaderNames    = [];
+
+    foreach ($this->racers as $racerName => $racer) {
+      $results[$racerName]['distance'] = $racer->distanceTraveled($time);
+
+      if ($results[$racerName]['distance'] > $leaderDistance) {
+        $leaderNames    = [$racerName];
+        $leaderDistance = $results[$racerName]['distance'];
+      } elseif ($leaderDistance === $results[$racerName]['distance']) {
+        $leaderNames[] = $racerName;
+      }
+    }
+
+    return $leaderNames;
+  }
+
+  /**
+   * Sort the results of the point race by points.
+   *
+   * @param array $results
+   *
+   * @return array
+   */
+  private function sortPointRaceResults($results)
+  {
+    foreach ($results as $name => $value) {
+      $points[$name] = $value['points'];
+    }
+
+    array_multisort($points, SORT_DESC, $results);
+
+    return $results;
   }
 
 }
