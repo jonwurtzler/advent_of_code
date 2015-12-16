@@ -78,6 +78,8 @@ class AuntSue implements AdventOutputInterface
     } else {
       throw new Exception("Failed to load file: " . $filePath);
     }
+
+    fclose($fh);
   }
 
   /**
