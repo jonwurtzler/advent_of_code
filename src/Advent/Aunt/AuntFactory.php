@@ -9,7 +9,8 @@ class AuntFactory
    *
    * @return aunt
    */
-  public function createAunt($line) {
+  public function createAunt($line)
+  {
     $knowns = $this->parseLine($line);
 
     $aunt = new Aunt();
