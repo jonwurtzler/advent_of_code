@@ -15,6 +15,11 @@ class AuntSue implements AdventOutputInterface
   protected $aunts = [];
 
   /**
+   * @var bool
+   */
+  protected $fuzzyCalibration = false;
+
+  /**
    * @var string
    */
   protected $fileInput = "src/data/sues.txt";
@@ -45,8 +50,11 @@ class AuntSue implements AdventOutputInterface
     $this->loadAunts($this->fileInput);
 
     $auntName = $this->findAunt($this->tickertape);
+    $this->fuzzyCalibration = true;
+    $realAuntName = $this->findAunt($this->tickertape);
 
     echo ("Aunt Found: " . $auntName . "\n");
+    echo ("Real Aunt Found: " . $realAuntName . "\n");
   }
 
   /**
@@ -86,12 +94,9 @@ class AuntSue implements AdventOutputInterface
     foreach ($this->aunts as $aunt) {
       $matchCount = 0;
       foreach ($tape as $category => $value) {
-        $getter = "get" . ucfirst($category);
+        $compare = "compare" . ucfirst($category);
 
-        if (
-          !is_null($auntValue = $aunt->$getter())
-          && ($auntValue === $value)
-        ) {
+        if ($this->$compare($aunt, $value)) {
           $matchCount++;
         }
       }
@@ -103,6 +108,197 @@ class AuntSue implements AdventOutputInterface
     reset($analysis);
 
     return key($analysis);
+  }
+
+  /**
+   * @param Aunt $aunt
+   * @param int  $tickerValue
+   *
+   * @return bool
+   */
+  private function compareAkitas($aunt, $tickerValue)
+  {
+    if (
+      !is_null($auntValue = $aunt->getAkitas())
+      && ($auntValue === $tickerValue)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @param Aunt $aunt
+   * @param int  $tickerValue
+   *
+   * @return bool
+   */
+  private function compareChildren($aunt, $tickerValue)
+  {
+    if (
+      !is_null($auntValue = $aunt->getChildren())
+      && ($auntValue === $tickerValue)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @param Aunt $aunt
+   * @param int  $tickerValue
+   *
+   * @return bool
+   */
+  private function compareCars($aunt, $tickerValue)
+  {
+    if (
+      !is_null($auntValue = $aunt->getCars())
+      && ($auntValue === $tickerValue)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @param Aunt $aunt
+   * @param int  $tickerValue
+   *
+   * @return bool
+   */
+  private function compareCats($aunt, $tickerValue)
+  {
+    if (!is_null($auntValue = $aunt->getCats())) {
+      if (!$this->fuzzyCalibration && ($auntValue === $tickerValue)) {
+        return true;
+      }
+
+      if ($this->fuzzyCalibration && ($auntValue > $tickerValue)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * @param Aunt $aunt
+   * @param int  $tickerValue
+   *
+   * @return bool
+   */
+  private function compareGoldfish($aunt, $tickerValue)
+  {
+    if (!is_null($auntValue = $aunt->getGoldfish())) {
+      if (!$this->fuzzyCalibration && ($auntValue === $tickerValue)) {
+        return true;
+      }
+
+      if ($this->fuzzyCalibration && ($auntValue < $tickerValue)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * @param Aunt $aunt
+   * @param int  $tickerValue
+   *
+   * @return bool
+   */
+  private function comparePerfumes($aunt, $tickerValue)
+  {
+    if (
+      !is_null($auntValue = $aunt->getPerfumes())
+      && ($auntValue === $tickerValue)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @param Aunt $aunt
+   * @param int  $tickerValue
+   *
+   * @return bool
+   */
+  private function comparePomeranians($aunt, $tickerValue)
+  {
+    if (!is_null($auntValue = $aunt->getPomeranians())) {
+      if (!$this->fuzzyCalibration && ($auntValue === $tickerValue)) {
+        return true;
+      }
+
+      if ($this->fuzzyCalibration && ($auntValue < $tickerValue)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * @param Aunt $aunt
+   * @param int  $tickerValue
+   *
+   * @return bool
+   */
+  private function compareSamoyeds($aunt, $tickerValue)
+  {
+    if (
+      !is_null($auntValue = $aunt->getSamoyeds())
+      && ($auntValue === $tickerValue)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @param Aunt $aunt
+   * @param int  $tickerValue
+   *
+   * @return bool
+   */
+  private function compareTrees($aunt, $tickerValue)
+  {
+    if (!is_null($auntValue = $aunt->getTrees())) {
+      if (!$this->fuzzyCalibration && ($auntValue === $tickerValue)) {
+        return true;
+      }
+
+      if ($this->fuzzyCalibration && ($auntValue > $tickerValue)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * @param Aunt $aunt
+   * @param int  $tickerValue
+   *
+   * @return bool
+   */
+  private function compareVizslas($aunt, $tickerValue)
+  {
+    if (
+      !is_null($auntValue = $aunt->getVizslas())
+      && ($auntValue === $tickerValue)
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
 }
