@@ -11,6 +11,7 @@
 use Advent\AdventCoinMining;
 use Advent\AuntSue;
 use Advent\CookieRecipe;
+use Advent\ElfAccounting;
 use Advent\LightsAlive;
 use Advent\LookAndSay;
 use Advent\NaughtyNiceList;
@@ -49,6 +50,9 @@ switch ($adventString) {
     break;
   case "santas_password":
     $adventDay = new SantasPassword();
+    break;
+  case "elf_accounting":
+    $adventDay = new ElfAccounting();
     break;
   case "reindeer_olympics":
     $adventDay = new ReindeerOlympics();
