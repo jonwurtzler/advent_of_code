@@ -9,6 +9,7 @@
  */
 
 use Advent\AdventCoinMining;
+use Advent\AuntSue;
 use Advent\LightsAlive;
 use Advent\LookAndSay;
 use Advent\NaughtyNiceList;
@@ -50,6 +51,9 @@ switch ($adventString) {
     break;
   case "reindeer_olympics":
     $adventDay = new ReindeerOlympics();
+    break;
+  case "aunt_sue":
+    $adventDay = new AuntSue();
     break;
 }
 
