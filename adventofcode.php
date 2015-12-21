@@ -12,6 +12,7 @@ use Advent\AdventCoinMining;
 use Advent\AuntSue;
 use Advent\CookieRecipe;
 use Advent\ElfAccounting;
+use Advent\InfiniteElves;
 use Advent\LightsAlive;
 use Advent\LookAndSay;
 use Advent\NaughtyNiceList;
@@ -62,6 +63,9 @@ switch ($adventString) {
     break;
   case "aunt_sue":
     $adventDay = new AuntSue();
+    break;
+  case "infinite_elves":
+    $adventDay = new InfiniteElves();
     break;
 }
 
