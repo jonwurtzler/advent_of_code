@@ -17,6 +17,7 @@ use Advent\InfiniteElves;
 use Advent\LightsAlive;
 use Advent\LookAndSay;
 use Advent\NaughtyNiceList;
+use Advent\ReindeerMedicine;
 use Advent\ReindeerOlympics;
 use Advent\SantaDeliveries;
 use Advent\SantasPassword;
@@ -64,6 +65,9 @@ switch ($adventString) {
     break;
   case "aunt_sue":
     $adventDay = new AuntSue();
+    break;
+  case "reindeer_medicine":
+    $adventDay = new ReindeerMedicine();
     break;
   case "infinite_elves":
     $adventDay = new InfiniteElves();
