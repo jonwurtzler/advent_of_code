@@ -26,4 +26,5 @@ Install the vendor dependencies with Composer:
     - Day 15: cookie_recipe          (php adventofcode.php cookie_recipe)
     - Day 16: aunt_sue               (php adventofcode.php aunt_sue)
     - Day 20: infinite_elves         (php adventofcode.php infinite_elves)      *SLOW*
+    - Day 21: christmas_rpg          (php adventofcode.php christmas_rpg)
     
