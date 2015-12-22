@@ -23,6 +23,7 @@ use Advent\SantaDeliveries;
 use Advent\SantasPassword;
 use Advent\StairClimber;
 use Advent\WrappingNeeds;
+use Advent\YardGif;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -65,6 +66,9 @@ switch ($adventString) {
     break;
   case "aunt_sue":
     $adventDay = new AuntSue();
+    break;
+  case "yard_gif":
+    $adventDay = new YardGif();
     break;
   case "reindeer_medicine":
     $adventDay = new ReindeerMedicine();
