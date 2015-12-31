@@ -22,6 +22,22 @@ class Wizard extends Player
   }
 
   /**
+   * Determine if the wizard can cast the given spell with it's current mana.
+   *
+   * @param Spell $spell
+   *
+   * @return bool
+   */
+  public function canCast($spell)
+  {
+    if ($spell->getCost() <= $this->mp) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
    * Spend mana for a spell
    *
    * @param Spell $spell

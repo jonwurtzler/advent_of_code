@@ -3,6 +3,7 @@
 namespace Advent;
 
 use Advent\WizardSimulator\Battle;
+use Advent\WizardSimulator\Spell;
 
 class WizardSimulator implements AdventOutputInterface
 {
@@ -12,14 +13,14 @@ class WizardSimulator implements AdventOutputInterface
   protected $battles = [];
 
   /**
+   * @var Battle
+   */
+  protected $lowestBattle;
+
+  /**
    * @var int
    */
   protected $lowestMpSpent = 10000;
-
-  /**
-   * @var array
-   */
-  protected $spells = ["Recharge", "Poison", "Shield", "Drain", "MagicMissile"];
 
   /**
    * Display the Advent Day's work.
@@ -28,34 +29,44 @@ class WizardSimulator implements AdventOutputInterface
    */
   public function display()
   {
-    $lowestMana = $this->findLowestMana();
-    $spells = "";
+    $this->runBattle(new Battle());
+    $history = "";
 
-    foreach ($lowestMana['spells'] as $spell) {
-      $spells .= $spell . "\n";
+    foreach ($this->lowestBattle->getHistory() as $spell) {
+      /** @var Spell $spell */
+      $history .= "Cost: " . $spell->getCost() . " Spell: " . $spell->getName() . "\n";
     }
 
     echo ("Lowest Mana Battle: \n" .
-      "Cost: " . $lowestMana['cost']   . "\n" .
-      $spells . "\n\n"
+      "Cost: " . $this->lowestMpSpent . "\n" .
+      $history . "\n\n"
     );
-  }
-
-  private function findLowestMana()
-  {
-
   }
 
   /**
    * Continue a battle.
    *
    * @param Battle $battle
-   *
-   * @return void
+   * @param Spell  $nextSpell
    */
-  private function runBattle($battle)
+  private function runBattle($battle, $nextSpell = null)
   {
+    // Setup a new round
+    $battle->newRound();
 
+    // Cast next spell
+    $availableSpells = $battle->getAvailableSpells();
+
+    if (is_null($nextSpell)) {
+      $nextSpell = array_shift($availableSpells);
+    }
+
+    $battle->castSpell($nextSpell);
+
+    // Activate Wizard Spells and check if boss is still alive
+    if (!$battle->activateSpells()) {
+
+    }
 
   }
 

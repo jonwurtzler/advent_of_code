@@ -2,12 +2,23 @@
 
 namespace Advent\WizardSimulator;
 
+use Advent\WizardSimulator\Spells\Drain;
+use Advent\WizardSimulator\Spells\MagicMissile;
+use Advent\WizardSimulator\Spells\Poison;
+use Advent\WizardSimulator\Spells\Recharge;
+use Advent\WizardSimulator\Spells\Shield;
+
 class Battle
 {
   /**
    * @var array
    */
   private $activeSpells = [];
+
+  /**
+   * @var array
+   */
+  private $availableSpells = [];
 
   /**
    * @var Boss
@@ -28,6 +39,14 @@ class Battle
   {
     $this->boss   = new Boss();
     $this->wizard = new Wizard();
+
+    // Load spells
+    $this->availableSpells[] = new Drain();
+    $this->availableSpells[] = new MagicMissile();
+    $this->availableSpells[] = new Poison();
+    $this->availableSpells[] = new Recharge();
+    $this->availableSpells[] = new Shield();
+
   }
 
   /**
@@ -61,6 +80,41 @@ class Battle
   }
 
   /**
+   * Get all the spells that could be cast.
+   *   Determined from those not already active and has the mana to cast.
+   *
+   * @return bool|array
+   */
+  public function getAvailableSpells()
+  {
+    $currentAvailableSpells = [];
+    $nonActiveSpells        = array_diff_assoc($this->availableSpells, $this->activeSpells);
+
+    foreach ($nonActiveSpells as $spell) {
+      /** @var Spell $spell */
+      if ($this->wizard->canCast($spell)) {
+        $currentAvailableSpells[] = $spell;
+      }
+    }
+
+    if (count($currentAvailableSpells) < 1) {
+      return false;
+    }
+
+    return $currentAvailableSpells;
+  }
+
+  /**
+   * Return the history of the battle.
+   *
+   * @return array
+   */
+  public function getHistory()
+  {
+    return $this->history;
+  }
+
+  /**
    * Cast a spell
    *
    * @param Spell $spell
@@ -77,7 +131,7 @@ class Battle
       }
 
       $this->activeSpells[$spell->getName()] = $spell;
-      $this->history[] = $spell->getName();
+      $this->history[] = $spell;
     }
 
     return true;

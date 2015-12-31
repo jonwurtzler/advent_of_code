@@ -24,4 +24,5 @@ class Boss extends Player
   {
     return $this->damage;
   }
+
 }
