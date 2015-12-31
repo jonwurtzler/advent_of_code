@@ -80,7 +80,7 @@ switch ($adventString) {
   case "christmas_rpg":
     $adventDay = new ChristmasRPG();
     break;
-  case "wizard_sim":
+  case "wizard_simulator":
     $adventDay = new WizardSimulator();
     break;
 }

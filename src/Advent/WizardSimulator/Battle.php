@@ -2,11 +2,7 @@
 
 namespace Advent\WizardSimulator;
 
-use Advent\WizardSimulator\Spells\Drain;
-use Advent\WizardSimulator\Spells\MagicMissile;
-use Advent\WizardSimulator\Spells\Poison;
-use Advent\WizardSimulator\Spells\Recharge;
-use Advent\WizardSimulator\Spells\Shield;
+use Advent\WizardSimulator\Spells\SpellCaster;
 
 class Battle
 {
@@ -14,11 +10,6 @@ class Battle
    * @var array
    */
   private $activeSpells = [];
-
-  /**
-   * @var array
-   */
-  private $availableSpells = [];
 
   /**
    * @var Boss
@@ -31,22 +22,30 @@ class Battle
   private $history = [];
 
   /**
+   * @var SpellCaster
+   */
+  private $spellCaster;
+
+  /**
    * @var Wizard
    */
   private $wizard;
 
   public function __construct()
   {
-    $this->boss   = new Boss();
-    $this->wizard = new Wizard();
+    $this->boss        = new Boss();
+    $this->spellCaster = new SpellCaster();
+    $this->wizard      = new Wizard();
+  }
 
-    // Load spells
-    $this->availableSpells[] = new Drain();
-    $this->availableSpells[] = new MagicMissile();
-    $this->availableSpells[] = new Poison();
-    $this->availableSpells[] = new Recharge();
-    $this->availableSpells[] = new Shield();
+  function __clone()
+  {
+    $this->boss   = clone $this->boss;
+    $this->wizard = clone $this->wizard;
 
+    foreach ($this->activeSpells as $spellName => $spell) {
+      $this->activeSpells[$spellName] = clone $spell;
+    }
   }
 
   /**
@@ -87,21 +86,38 @@ class Battle
    */
   public function getAvailableSpells()
   {
-    $currentAvailableSpells = [];
-    $nonActiveSpells        = array_diff_assoc($this->availableSpells, $this->activeSpells);
+    $availableSpells = [];
+    $nonActiveSpells = array_diff_assoc($this->spellCaster->availableSpells(), array_keys($this->activeSpells));
 
-    foreach ($nonActiveSpells as $spell) {
-      /** @var Spell $spell */
+    foreach ($nonActiveSpells as $spellName) {
+      $spell = $this->spellCaster->cast($spellName);
       if ($this->wizard->canCast($spell)) {
-        $currentAvailableSpells[] = $spell;
+        $availableSpells[] = $spell;
       }
     }
 
-    if (count($currentAvailableSpells) < 1) {
+    if (count($availableSpells) < 1) {
       return false;
     }
 
-    return $currentAvailableSpells;
+    return $availableSpells;
+  }
+
+  /**
+   * Get a total of MP spent in this battle.
+   *
+   * @return int
+   */
+  public function getBattleMPCost()
+  {
+    $totalMPCost = 0;
+
+    foreach ($this->history as $spell) {
+      /** @var Spell $spell */
+      $totalMPCost += $spell->getCost();
+    }
+
+    return $totalMPCost;
   }
 
   /**
@@ -130,8 +146,9 @@ class Battle
         return false;
       }
 
-      $this->activeSpells[$spell->getName()] = $spell;
-      $this->history[] = $spell;
+      $castSpell = $this->spellCaster->cast($spell->getName());
+      $this->activeSpells[$spell->getName()] = $castSpell;
+      $this->history[] = $castSpell;
     }
 
     return true;
