@@ -16,6 +16,7 @@ class Recharge extends Spell
     $this->name     = "Recharge";
     $this->healing  = 0;
     $this->mana     = 101;
+    $this->type     = static::TYPE_EFFECT;
   }
 
 }

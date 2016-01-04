@@ -16,6 +16,7 @@ class Poison extends Spell
     $this->name     = "Poison";
     $this->healing  = 0;
     $this->mana     = 0;
+    $this->type     = static::TYPE_EFFECT;
   }
 
 }

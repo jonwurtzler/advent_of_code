@@ -5,6 +5,10 @@ namespace Advent;
 use Advent\WizardSimulator\Battle;
 use Advent\WizardSimulator\Spell;
 
+// First check: 959 (too high) 10,000 battles
+// First check: 939 (too high) 10,000 battles
+// 900 is the right answer....how...
+
 class WizardSimulator implements AdventOutputInterface
 {
   /**
@@ -22,9 +26,7 @@ class WizardSimulator implements AdventOutputInterface
   /**
    * @var int
    */
-  protected $lowestMpSpent = 10000;
-
-  protected $maxBattles = 30000;
+  protected $lowestMpSpent = 1100;
 
   /**
    * Display the Advent Day's work.
@@ -57,7 +59,7 @@ class WizardSimulator implements AdventOutputInterface
    */
   private function recordBattle($battle)
   {
-    $battleCost      = $battle->getBattleMPCost();
+    $battleCost      = $battle->getBattleCost();
     $this->battles[] = $battle;
 
     if ($battleCost < $this->lowestMpSpent) {
@@ -76,33 +78,32 @@ class WizardSimulator implements AdventOutputInterface
    *
    * @return bool
    */
-  private function runBattle($battle, $nextSpell = null)
+  private function runBattle($battle, $nextSpell)
   {
-    if (count($battle->getHistory()) > 10) { return false; }
-    if ($this->battleNumber > $this->maxBattles) { return false; }
-
-    // Setup a new round
-    $battle->newRound();
-
-    // Cast next spell
-    $battle->castSpell($nextSpell);
-
-    // Activate wizard spells
-    $bossAlive = $battle->activateSpells();
-
-    // Check if boss is still alive
-    if (!$bossAlive) {
+    // Wizard Round
+    //   Activate Wizard Spells and if boss is still alive
+    if (!$battle->activateSpells()) {
       return $this->recordBattle($battle);
     }
 
-    // Deal boss damage if still alive
-    $wizardAlive = $battle->dealBossDamage();
+    //   Cast next spell
+    $battle->castSpell($nextSpell);
 
-    // Check if wizard is still alive.
-    if (!$wizardAlive) {
+    // Boss Round
+    //   Setup a new round
+    $battle->newRound();
+
+    //   Activate Wizard Spells and if boss is still alive
+    if (!$battle->activateSpells()) {
+      return $this->recordBattle($battle);
+    }
+
+    //   Deal Boss dmg and check if wizard is still alive
+    if (!$battle->dealBossDamage()) {
       return false;
     }
 
+    // Both still alive, continue to next rounds.
     return $this->spellHandler($battle);
   }
 
@@ -115,23 +116,31 @@ class WizardSimulator implements AdventOutputInterface
    */
   private function spellHandler($battle)
   {
+    // Setup a new round
+    $battle->newRound();
+
+    // Get possible spells for this round
     $spells = $battle->getAvailableSpells();
 
+    // If there are spells available, the battle can continue
     if ($spells) {
       foreach ($spells as $spell) {
+        /** @var Spell $spell */
+        // Skip to the next spell if it would bring the total cost higher than the current lowest
+        if (($battle->getBattleCost() + $spell->getCost()) > $this->lowestMpSpent) { continue; }
+
         // Make a branch of this battle to run through next spells with.
         $battleBranch = clone $battle;
-        //$this->currentBattles[] = $battleBranch;
+
         $this->battleNumber++;
 
         $this->runBattle($battleBranch, $spell);
       }
+
+      return true;
     }
 
-    return true;
+    return false;
   }
-
-  // First check: 959 (too high) 10,000 battles
-  // First check: 939 (too high) 10,000 battles
 
 }

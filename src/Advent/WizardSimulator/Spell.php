@@ -5,6 +5,9 @@ namespace Advent\WizardSimulator;
 abstract class Spell
 {
 
+  const TYPE_INSTANT = "instant";
+  const TYPE_EFFECT  = "effect";
+
   /**
    * @var int
    */
@@ -39,6 +42,11 @@ abstract class Spell
    * @var string
    */
   protected $name = "";
+
+  /**
+   * @var string
+   */
+  protected $type = "instant";
 
   /**
    * @return int
@@ -94,6 +102,22 @@ abstract class Spell
   public function getName()
   {
     return $this->name;
+  }
+
+  /**
+   * @return string
+   */
+  public function getType()
+  {
+    return $this->type;
+  }
+
+  /**
+   * @return bool
+   */
+  public function isInstant()
+  {
+    return ($this->type === self::TYPE_INSTANT);
   }
 
   /**

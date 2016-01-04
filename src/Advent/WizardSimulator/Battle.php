@@ -12,6 +12,11 @@ class Battle
   private $activeSpells = [];
 
   /**
+   * @var int
+   */
+  private $battleCost = 0;
+
+  /**
    * @var Boss
    */
   private $boss;
@@ -65,17 +70,18 @@ class Battle
    */
   public function newRound()
   {
-    foreach ($this->activeSpells as $spellName => $spell) {
-      /* @var Spell $spell */
-      if ($spell->getDuration() < 1) {
-        unset($this->activeSpells[$spellName]);
-      } else {
-        $spell->newRound();
-      }
-    }
-
     // Reset Armor
     $this->wizard->resetArmor();
+
+    // Run through spell list and clear out old spells
+    foreach ($this->activeSpells as $spellName => $spell) {
+      /* @var Spell $spell */
+      $spell->newRound();
+
+      if ($spell->getDuration() < 1) {
+        unset($this->activeSpells[$spellName]);
+      }
+    }
   }
 
   /**
@@ -108,16 +114,9 @@ class Battle
    *
    * @return int
    */
-  public function getBattleMPCost()
+  public function getBattleCost()
   {
-    $totalMPCost = 0;
-
-    foreach ($this->history as $spell) {
-      /** @var Spell $spell */
-      $totalMPCost += $spell->getCost();
-    }
-
-    return $totalMPCost;
+    return $this->battleCost;
   }
 
   /**
@@ -135,23 +134,16 @@ class Battle
    *
    * @param Spell $spell
    *
-   * @return bool
+   * @return void
    */
   public function castSpell($spell)
   {
-    if (!in_array($spell, $this->activeSpells)) {
-      $cast = $this->wizard->spendMana($spell);
+    $this->wizard->spendMana($spell);
 
-      if (!$cast) {
-        return false;
-      }
-
-      $castSpell = $this->spellCaster->cast($spell->getName());
-      $this->activeSpells[$spell->getName()] = $castSpell;
-      $this->history[] = $castSpell;
-    }
-
-    return true;
+    $castSpell = $this->spellCaster->cast($spell->getName());
+    $this->activeSpells[$spell->getName()] = $castSpell;
+    $this->battleCost += $spell->getCost();
+    $this->history[] = $castSpell;
   }
 
   /**
@@ -173,12 +165,12 @@ class Battle
         }
       }
 
-      // Apply Armor
+      // Apply Armor if Spell has armor value
       if ($spell->getArmor() > 0) {
         $this->wizard->shield($spell->getArmor());
       }
 
-      // Recharge Mana
+      // Recharge Mana if Spell has mana value
       if ($spell->getMana() > 0) {
         $this->wizard->recharge($spell->getMana());
       }

@@ -16,6 +16,7 @@ class Drain extends Spell
     $this->name     = "Drain";
     $this->healing  = 2;
     $this->mana     = 0;
+    $this->type     = static::TYPE_INSTANT;
   }
 
 }

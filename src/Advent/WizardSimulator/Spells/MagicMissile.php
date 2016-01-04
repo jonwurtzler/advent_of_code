@@ -16,6 +16,7 @@ class MagicMissile extends Spell
     $this->name     = "Magic Missile";
     $this->healing  = 0;
     $this->mana     = 0;
+    $this->type     = static::TYPE_INSTANT;
   }
 
 }
