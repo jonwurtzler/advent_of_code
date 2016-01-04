@@ -80,25 +80,25 @@ class WizardSimulator implements AdventOutputInterface
    */
   private function runBattle($battle, $nextSpell)
   {
-    // Wizard Round
-    //   Activate Wizard Spells and if boss is still alive
-    if (!$battle->activateSpells()) {
-      return $this->recordBattle($battle);
-    }
-
-    //   Cast next spell
+    /* ----- Wizard Round ----- */
+    // Cast next spell
     $battle->castSpell($nextSpell);
 
-    // Boss Round
-    //   Setup a new round
-    $battle->newRound();
-
-    //   Activate Wizard Spells and if boss is still alive
-    if (!$battle->activateSpells()) {
+    // Run any instant spells
+    if (!$battle->activateInstantSpell()) {
       return $this->recordBattle($battle);
     }
 
-    //   Deal Boss dmg and check if wizard is still alive
+    /* ------ Boss Round ------ */
+    // Setup a new round
+    $battle->newRound();
+
+    // Activate Wizard Spells and if boss is still alive
+    if (!$battle->activateEffectSpells()) {
+      return $this->recordBattle($battle);
+    }
+
+    // Deal Boss dmg and check if wizard is still alive
     if (!$battle->dealBossDamage()) {
       return false;
     }
@@ -118,6 +118,11 @@ class WizardSimulator implements AdventOutputInterface
   {
     // Setup a new round
     $battle->newRound();
+
+    // Activate Wizard Spells and if boss is still alive
+    if (!$battle->activateEffectSpells()) {
+      return $this->recordBattle($battle);
+    }
 
     // Get possible spells for this round
     $spells = $battle->getAvailableSpells();

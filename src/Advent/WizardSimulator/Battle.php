@@ -9,7 +9,12 @@ class Battle
   /**
    * @var array
    */
-  private $activeSpells = [];
+  private $activeEffectSpells = [];
+
+  /**
+   * @var Spell
+   */
+  private $activeInstantSpell = null;
 
   /**
    * @var int
@@ -48,19 +53,19 @@ class Battle
     $this->boss   = clone $this->boss;
     $this->wizard = clone $this->wizard;
 
-    foreach ($this->activeSpells as $spellName => $spell) {
-      $this->activeSpells[$spellName] = clone $spell;
+    foreach ($this->activeEffectSpells as $spellName => $spell) {
+      $this->activeEffectSpells[$spellName] = clone $spell;
     }
   }
 
   /**
-   * Get the current spells that are active.
+   * Get the current effect spells that are active.
    *
    * @return array
    */
-  public function getActiveSpells()
+  public function getActiveEffectSpells()
   {
-    return $this->activeSpells;
+    return $this->activeEffectSpells;
   }
 
   /**
@@ -74,12 +79,12 @@ class Battle
     $this->wizard->resetArmor();
 
     // Run through spell list and clear out old spells
-    foreach ($this->activeSpells as $spellName => $spell) {
+    foreach ($this->activeEffectSpells as $spellName => $spell) {
       /* @var Spell $spell */
       $spell->newRound();
 
       if ($spell->getDuration() < 1) {
-        unset($this->activeSpells[$spellName]);
+        unset($this->activeEffectSpells[$spellName]);
       }
     }
   }
@@ -93,7 +98,7 @@ class Battle
   public function getAvailableSpells()
   {
     $availableSpells = [];
-    $nonActiveSpells = array_diff_assoc($this->spellCaster->availableSpells(), array_keys($this->activeSpells));
+    $nonActiveSpells = array_diff_assoc($this->spellCaster->availableSpells(), array_keys($this->activeEffectSpells));
 
     foreach ($nonActiveSpells as $spellName) {
       $spell = $this->spellCaster->cast($spellName);
@@ -141,7 +146,14 @@ class Battle
     $this->wizard->spendMana($spell);
 
     $castSpell = $this->spellCaster->cast($spell->getName());
-    $this->activeSpells[$spell->getName()] = $castSpell;
+
+    if ($spell->isInstant()) {
+      $this->activeInstantSpell = $castSpell;
+    } else {
+      $this->activeEffectSpells[$spell->getName()] = $castSpell;
+    }
+
+
     $this->battleCost += $spell->getCost();
     $this->history[] = $castSpell;
   }
@@ -151,9 +163,9 @@ class Battle
    *
    * @return bool
    */
-  public function activateSpells()
+  public function activateEffectSpells()
   {
-    foreach ($this->activeSpells as $spellName => $spell) {
+    foreach ($this->activeEffectSpells as $spellName => $spell) {
       /** @var Spell $spell */
 
       // Deal Spell Damage
@@ -173,6 +185,29 @@ class Battle
       // Recharge Mana if Spell has mana value
       if ($spell->getMana() > 0) {
         $this->wizard->recharge($spell->getMana());
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Trigger any instant spells that need to be run.
+   *   Current possible spells: Drain, Magic Missile
+   *
+   * @return bool
+   */
+  public function activateInstantSpell()
+  {
+    if (!is_null($this->activeInstantSpell)) {
+      $spell = $this->activeInstantSpell;
+      $this->activeInstantSpell = null;
+
+      // Deal Spell Damage
+      if ($spell->getDamage() > 0) {
+        if (!$this->boss->takeDamage($spell->getDamage(), false)) {
+          return false;
+        }
       }
 
       // Heal HP
