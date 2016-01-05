@@ -9,41 +9,47 @@ class Battle
   /**
    * @var array
    */
-  private $activeEffectSpells = [];
+  protected $activeEffectSpells = [];
 
   /**
    * @var Spell
    */
-  private $activeInstantSpell = null;
+  protected $activeInstantSpell = null;
 
   /**
    * @var int
    */
-  private $battleCost = 0;
+  protected $battleCost = 0;
 
   /**
    * @var Boss
    */
-  private $boss;
+  protected $boss;
+
+  /**
+   * @var bool
+   */
+  protected $hardMode = false;
 
   /**
    * @var array
    */
-  private $history = [];
+  protected $history = [];
 
   /**
    * @var SpellCaster
    */
-  private $spellCaster;
+  protected $spellCaster;
 
   /**
    * @var Wizard
    */
-  private $wizard;
+  protected $wizard;
 
-  public function __construct()
+  public function __construct($hardMode = false)
   {
     $this->boss        = new Boss();
+    $this->hardMode    = $hardMode;
     $this->spellCaster = new SpellCaster();
     $this->wizard      = new Wizard();
   }
@@ -217,6 +223,22 @@ class Battle
 
     if (!$alive) {
       return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Check for hard mode, wizard takes a dmg if it is.
+   *
+   * @return bool
+   */
+  public function hardMode()
+  {
+    if ($this->hardMode) {
+      if (!$this->wizard->takeDamage(1, false)) {
+        return false;
+      }
     }
 
     return true;

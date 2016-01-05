@@ -9,6 +9,29 @@ use Advent\WizardSimulator\Spell;
 // First check: 939 (too high) 10,000 battles
 // 900 is the right answer....how...
 // Finally got to 900.  Found that I was not handling the rounds correctly or how spells were being removed and cast.
+/*
+ * NM Lowest Mana Battle:
+ * Cost: 900
+ * Cost: 173 Spell: Poison
+ * Cost: 229 Spell: Recharge
+ * Cost: 113 Spell: Shield
+ * Cost: 173 Spell: Poison
+ * Cost: 53 Spell: Magic Missile
+ * Cost: 53 Spell: Magic Missile
+ * Cost: 53 Spell: Magic Missile
+ * Cost: 53 Spell: Magic Missile
+ *
+ * HM Lowest Mana Battle:
+ * Cost: 1216
+ * Cost: 173 Spell: Poison
+ * Cost: 229 Spell: Recharge
+ * Cost: 113 Spell: Shield
+ * Cost: 173 Spell: Poison
+ * Cost: 229 Spell: Recharge
+ * Cost: 73 Spell: Drain
+ * Cost: 173 Spell: Poison
+ * Cost: 53 Spell: Magic Missile
+ */
 
 class WizardSimulator implements AdventOutputInterface
 {
@@ -17,6 +40,9 @@ class WizardSimulator implements AdventOutputInterface
    */
   protected $battles = [];
 
+  /**
+   * @var int
+   */
   protected $battleNumber = 0;
 
   /**
@@ -38,15 +64,35 @@ class WizardSimulator implements AdventOutputInterface
   {
     $this->spellHandler(new Battle());
 
-    $history = "";
+    $nmCost    = "Cost: " . $this->lowestMpSpent;
+    $nmHistory = "";
     foreach ($this->lowestBattle->getHistory() as $spell) {
       /** @var Spell $spell */
-      $history .= "Cost: " . $spell->getCost() . " Spell: " . $spell->getName() . "\n";
+      $nmHistory .= "Cost: " . $spell->getCost() . " Spell: " . $spell->getName() . "\n";
     }
 
-    echo ("Lowest Mana Battle: \n" .
-      "Cost: " . $this->lowestMpSpent . "\n" .
-      $history . "\n\n"
+    echo (
+      "NM Lowest Mana Battle: \n" .
+      $nmCost . "\n" .
+      $nmHistory . "\n\n"
+    );
+
+    // Reset for HM
+    $this->lowestBattle  = null;
+    $this->lowestMpSpent = 1500;
+    $this->spellHandler(new Battle(true));
+
+    $hmCost    = "Cost: " . $this->lowestMpSpent;
+    $hmHistory = "";
+    foreach ($this->lowestBattle->getHistory() as $spell) {
+      /** @var Spell $spell */
+      $hmHistory .= "Cost: " . $spell->getCost() . " Spell: " . $spell->getName() . "\n";
+    }
+
+    echo (
+      "HM Lowest Mana Battle: \n" .
+      $hmCost . "\n" .
+      $hmHistory . "\n\n"
     );
   }
 
@@ -114,6 +160,11 @@ class WizardSimulator implements AdventOutputInterface
    */
   private function spellHandler($battle)
   {
+    // Check for Hard Mode.
+    if(!$battle->hardMode()) {
+      return false;
+    }
+
     // Activate Wizard Spells and if boss is still alive
     if ($battle->activateEffectSpells()) {
       return $this->recordBattle($battle);
