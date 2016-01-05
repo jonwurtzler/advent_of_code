@@ -30,4 +30,5 @@ Install the vendor dependencies with Composer:
     - Day 20: infinite_elves         (php adventofcode.php infinite_elves)      *SLOW*
     - Day 21: christmas_rpg          (php adventofcode.php christmas_rpg)
     - Day 22: wizard_simulator       (php adventofcode.php wizard_simulator)
+    - Day 23: turing_lock            (php adventofcode.php turing_lock)
     

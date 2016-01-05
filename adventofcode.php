@@ -22,6 +22,7 @@ use Advent\ReindeerOlympics;
 use Advent\SantaDeliveries;
 use Advent\SantasPassword;
 use Advent\StairClimber;
+use Advent\TuringLock;
 use Advent\WizardSimulator;
 use Advent\WrappingNeeds;
 use Advent\YardGif;
@@ -82,6 +83,9 @@ switch ($adventString) {
     break;
   case "wizard_simulator":
     $adventDay = new WizardSimulator();
+    break;
+  case "turing_lock":
+    $adventDay = new TuringLock();
     break;
 }
 
