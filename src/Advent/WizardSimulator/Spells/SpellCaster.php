@@ -6,7 +6,7 @@ use Advent\WizardSimulator\Spell;
 
 class SpellCaster
 {
-  protected $possibleSpells = ["Recharge", "Shield", "Poison", "Drain", "Magic Missile"];
+  protected $possibleSpells = ["Poison", "Recharge", "Shield", "Magic Missile", "Drain"];
 
   /**
    * Return a string value of possible spells to cast.

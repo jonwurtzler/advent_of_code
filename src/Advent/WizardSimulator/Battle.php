@@ -69,27 +69,6 @@ class Battle
   }
 
   /**
-   * Check current spells and clear out expired ones.
-   *
-   * @return void
-   */
-  public function newRound()
-  {
-    // Reset Armor
-    $this->wizard->resetArmor();
-
-    // Run through spell list and clear out old spells
-    foreach ($this->activeEffectSpells as $spellName => $spell) {
-      /* @var Spell $spell */
-      $spell->newRound();
-
-      if ($spell->getDuration() < 1) {
-        unset($this->activeEffectSpells[$spellName]);
-      }
-    }
-  }
-
-  /**
    * Get all the spells that could be cast.
    *   Determined from those not already active and has the mana to cast.
    *
@@ -165,6 +144,9 @@ class Battle
    */
   public function activateEffectSpells()
   {
+    // Reset Armor
+    $this->wizard->resetArmor();
+
     foreach ($this->activeEffectSpells as $spellName => $spell) {
       /** @var Spell $spell */
 
@@ -173,7 +155,7 @@ class Battle
         $alive = $this->boss->takeDamage($spell->getDamage(), false);
 
         if (!$alive) {
-          return false;
+          return true;
         }
       }
 
@@ -186,9 +168,14 @@ class Battle
       if ($spell->getMana() > 0) {
         $this->wizard->recharge($spell->getMana());
       }
+
+      // Spend the round for that spell and clear it if now at 0
+      if (!$spell->newRound()) {
+        unset($this->activeEffectSpells[$spellName]);
+      }
     }
 
-    return true;
+    return false;
   }
 
   /**
@@ -206,7 +193,7 @@ class Battle
       // Deal Spell Damage
       if ($spell->getDamage() > 0) {
         if (!$this->boss->takeDamage($spell->getDamage(), false)) {
-          return false;
+          return true;
         }
       }
 
@@ -216,7 +203,7 @@ class Battle
       }
     }
 
-    return true;
+    return false;
   }
 
   /**

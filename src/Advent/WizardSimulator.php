@@ -8,6 +8,7 @@ use Advent\WizardSimulator\Spell;
 // First check: 959 (too high) 10,000 battles
 // First check: 939 (too high) 10,000 battles
 // 900 is the right answer....how...
+// Finally got to 900.  Found that I was not handling the rounds correctly or how spells were being removed and cast.
 
 class WizardSimulator implements AdventOutputInterface
 {
@@ -85,16 +86,13 @@ class WizardSimulator implements AdventOutputInterface
     $battle->castSpell($nextSpell);
 
     // Run any instant spells
-    if (!$battle->activateInstantSpell()) {
+    if ($battle->activateInstantSpell()) {
       return $this->recordBattle($battle);
     }
 
     /* ------ Boss Round ------ */
-    // Setup a new round
-    $battle->newRound();
-
     // Activate Wizard Spells and if boss is still alive
-    if (!$battle->activateEffectSpells()) {
+    if ($battle->activateEffectSpells()) {
       return $this->recordBattle($battle);
     }
 
@@ -116,11 +114,8 @@ class WizardSimulator implements AdventOutputInterface
    */
   private function spellHandler($battle)
   {
-    // Setup a new round
-    $battle->newRound();
-
     // Activate Wizard Spells and if boss is still alive
-    if (!$battle->activateEffectSpells()) {
+    if ($battle->activateEffectSpells()) {
       return $this->recordBattle($battle);
     }
 

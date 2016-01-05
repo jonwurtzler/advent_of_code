@@ -122,14 +122,17 @@ abstract class Spell
 
   /**
    * Spend a round of duration.
+   *   Return false if now expired.
    *
-   * @return $this
+   * @return bool
    */
   public function newRound()
   {
-    $this->duration--;
+    if (--$this->duration < 1) {
+      return false;
+    }
 
-    return $this;
+    return true;
   }
 
 }
