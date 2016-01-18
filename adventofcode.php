@@ -23,6 +23,7 @@ use Advent\SantaDeliveries;
 use Advent\SantasPassword;
 use Advent\SleighBalance;
 use Advent\StairClimber;
+use Advent\TripAdviser;
 use Advent\TuringLock;
 use Advent\WizardSimulator;
 use Advent\WrappingNeeds;
@@ -51,6 +52,9 @@ switch ($adventString) {
     break;
   case "lights_alive":
     $adventDay = new LightsAlive();
+    break;
+  case "trip_adviser":
+    $adventDay = new TripAdviser();
     break;
   case "look_and_say":
     $adventDay = new LookAndSay();

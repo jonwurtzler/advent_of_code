@@ -19,6 +19,7 @@ Install the vendor dependencies with Composer:
     - Day 4:  coin_mining            (php adventofcode.php coin_mining)         *SLOW*
     - Day 5:  naughty_nice_list      (php adventofcode.php naughty_nice_list)
     - Day 6:  lights_alive           (php adventofcode.php lights_alive)        *VERY SLOW*
+    - Day 9:  trip_adviser           (php adventofcode.php trip_adviser)
     - Day 10: look_and_say           (php adventofcode.php look_and_say)
     - Day 11: stantas_password       (php adventofcode.php stantas_password)
     - Day 12: elf_accounting         (php adventofcode.php elf_accounting)
