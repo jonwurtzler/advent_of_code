@@ -17,6 +17,16 @@ class TripAdviser implements AdventOutputInterface
   protected $fileInput = "src/data/map.txt";
 
   /**
+   * @var Trip
+   */
+  protected $longestTrip;
+
+  /**
+   * @var int
+   */
+  protected $longestTripDistance = 100;
+
+  /**
    * @var array
    */
   protected $locations = [];
@@ -29,12 +39,12 @@ class TripAdviser implements AdventOutputInterface
   /**
    * @var Trip
    */
-  protected $lowestTrip;
+  protected $shortestTrip;
 
   /**
    * @var int
    */
-  protected $lowestTripDistance = 10000;
+  protected $shortestTripDistance = 10000;
 
   /**
    * Display the Advent Day's work.
@@ -46,16 +56,27 @@ class TripAdviser implements AdventOutputInterface
     $this->loadLocations($this->fileInput);
     $this->calculateShortestDistance();
 
-    $tripCost = "Total Distance: " . $this->lowestTripDistance;
-    $history  = "";
-    foreach ($this->lowestTrip->getTripLog() as $location => $distance) {
-      $history .= "Location: " . $location . " Distance: " . $distance . "\n";
+    // Short trip output
+    $shortTripCost = "Total Distance: " . $this->shortestTripDistance;
+    $shortHistory  = "";
+    foreach ($this->shortestTrip->getTripLog() as $location => $distance) {
+      $shortHistory .= "Location: " . $location . " Distance: " . $distance . "\n";
+    }
+
+    // Long trip output
+    $longTripCost = "Total Distance: " . $this->longestTripDistance;
+    $longHistory  = "";
+    foreach ($this->longestTrip->getTripLog() as $location => $distance) {
+      $longHistory .= "Location: " . $location . " Distance: " . $distance . "\n";
     }
 
     echo (
-      "Lowest Trip: \n" .
-      $tripCost . "\n" .
-      $history . "\n\n"
+      "Shortest Trip: \n" .
+      $shortTripCost . "\n" .
+      $shortHistory . "\n\n" .
+      "Longest Trip: \n" .
+      $longTripCost . "\n" .
+      $longHistory . "\n\n"
     );
 
   }
@@ -186,10 +207,16 @@ class TripAdviser implements AdventOutputInterface
     $distanceTraveled = $trip->getTotalDistanceTraveled();
     $this->completedTrips[$distanceTraveled][] = $trip;
 
-    // If this is the lowest trip, record it.
-    if ($distanceTraveled < $this->lowestTripDistance) {
-      $this->lowestTrip         = $trip;
-      $this->lowestTripDistance = $distanceTraveled;
+    // If this is the shortest trip, record it.
+    if ($distanceTraveled < $this->shortestTripDistance) {
+      $this->shortestTrip         = $trip;
+      $this->shortestTripDistance = $distanceTraveled;
+    }
+
+    // If this is the longest trip, record it.
+    if ($distanceTraveled > $this->longestTripDistance) {
+      $this->longestTrip         = $trip;
+      $this->longestTripDistance = $distanceTraveled;
     }
 
   }
