@@ -8,12 +8,19 @@ use Exception;
  * Class KnightsTable
  * @package Advent
  *
+ * Step 1
  * Try 1: 498 (Failed, too low)
  * Carol -> (149) -> FrankAlice -> (57) -> BobDavid -> (98) -> GeorgeMallory -> (100) -> Eric -> (94)
  * Wasn't handling each space correctly.
  *
  * Try 2: 709 (Success!)
- * Alice -> (57) -> Bob -> (87) -> Mallory -> (100) -> Eric -> (94) -> Carol -> (149) -> Frank -> (41) -> David -> (98) -> George -> (83)
+ * Alice -> (57) -> Bob -> (87) -> Mallory -> (100) -> Eric -> (94) -> Carol -> (149) ->
+ * Frank -> (41) -> David -> (98) -> George -> (83)
+ *
+ * Step 2
+ * Try 1: 668 (Success!)
+ * Alice -> (57) -> Bob -> (87) -> Mallory -> (100) -> Eric -> (94) -> Carol -> (149) ->
+ * Frank -> (0) -> Me -> (0) -> David -> (98) -> George -> (83)
  */
 class KnightsTable implements AdventOutputInterface
 {
@@ -63,10 +70,40 @@ class KnightsTable implements AdventOutputInterface
     $holySeating   = $this->holyKnightTable->getSeatingOutput();
 
     echo (
-      "Holy Table: \n" .
+      "Holy Table (without me): \n" .
       $holyHappiness . "\n" .
       $holySeating . "\n\n"
     );
+
+    // Add me as guest
+    $this->resetHolyTable();
+    $this->addMeAsKnight();
+    $this->seatVisitingKnights();
+
+    // Short trip output
+    $holyHappiness = "Total Happiness: " . $this->holyKnightHappiness;
+    $holySeating   = $this->holyKnightTable->getSeatingOutput();
+
+    echo (
+      "Holy Table (with me): \n" .
+      $holyHappiness . "\n" .
+      $holySeating . "\n\n"
+    );
+  }
+
+  /**
+   * Add myself to the list of guests to be seated.
+   */
+  private function addMeAsKnight()
+  {
+    $me = new Knight("Me");
+    foreach ($this->knights as $knight) {
+      /** @var Knight $knight */
+      $me->setHappiness($knight->getName(), 0);
+    }
+
+    $this->guestList[]   = "Me";
+    $this->knights["Me"] = $me;
   }
 
   /**
@@ -128,6 +165,16 @@ class KnightsTable implements AdventOutputInterface
       $this->holyKnightHappiness = $happiness;
       $this->holyKnightTable     = $table;
     }
+  }
+
+  /**
+   * Reset the holy table information to run another seating with new guest.
+   */
+  private function resetHolyTable()
+  {
+    $this->fullTables          = [];
+    $this->holyKnightTable     = null;
+    $this->holyKnightHappiness = 0;
   }
 
   /**
