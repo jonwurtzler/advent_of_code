@@ -14,6 +14,7 @@ use Advent\ChristmasRPG;
 use Advent\CookieRecipe;
 use Advent\ElfAccounting;
 use Advent\InfiniteElves;
+use Advent\KnightsTable;
 use Advent\LightsAlive;
 use Advent\LookAndSay;
 use Advent\NaughtyNiceList;
@@ -64,6 +65,9 @@ switch ($adventString) {
     break;
   case "elf_accounting":
     $adventDay = new ElfAccounting();
+    break;
+  case "knights_table":
+    $adventDay = new KnightsTable();
     break;
   case "reindeer_olympics":
     $adventDay = new ReindeerOlympics();

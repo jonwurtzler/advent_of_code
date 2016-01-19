@@ -23,6 +23,7 @@ Install the vendor dependencies with Composer:
     - Day 10: look_and_say           (php adventofcode.php look_and_say)
     - Day 11: stantas_password       (php adventofcode.php stantas_password)
     - Day 12: elf_accounting         (php adventofcode.php elf_accounting)
+    - Day 13: knights_table          (php adventofcode.php knights_table)
     - Day 14: reindeer_olympics      (php adventofcode.php reindeer_olympics)
     - Day 15: cookie_recipe          (php adventofcode.php cookie_recipe)
     - Day 16: aunt_sue               (php adventofcode.php aunt_sue)
